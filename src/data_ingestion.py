@@ -28,6 +28,21 @@ file_handler.setFormatter(formatter)
 logger.addHandler(console_handler)
 logger.addHandler(file_handler)
 
+def load_params(param_path:str) -> dict:
+    try:
+        with open(param_path,'r') as  file:
+            params=yaml.safe_load(file)
+        logger.debug("Parameters retrived from %s",param_path)
+        return params
+    except FileNotFoundError:
+        logger.error("File not found: %s",param_path)
+        raise
+    except yaml.YAMLError as e :
+        logger.error("YAML error:%s",e)
+        raise
+    except Exception as e:
+        logger.error("Unexpected error:",e)
+        raise
 
 def load_data(data_url: str) -> pd.DataFrame:
     """Load data from a CSV file."""
@@ -70,7 +85,8 @@ def save_data(train_data: pd.DataFrame, test_data: pd.DataFrame, data_path: str)
 
 def main():
     try:
-        test_size = 0.2
+        params=load_params(param_path='params.yaml')
+        test_size=params['data_ingestion']['test_size']
         data_path = 'https://raw.githubusercontent.com/vikashishere/Datasets/main/spam.csv'
         df = load_data(data_url=data_path)
         final_df = preprocess_data(df)
