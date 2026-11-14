@@ -127,7 +127,7 @@ def main():
         with Live(save_dvc_exp=True) as live:
             live.log_metric('accuracy',metrics['accuracy'])
             live.log_metric('precision',metrics['precision'])
-            live.log_metric('recall',metrics['precision'])
+            live.log_metric('recall',metrics['recall'])
             live.log_metric('auc',metrics['auc'])
             for params,value in params.items():
             
